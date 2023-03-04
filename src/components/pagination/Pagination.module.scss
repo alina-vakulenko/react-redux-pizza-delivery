@@ -1,0 +1,36 @@
+@import "../../scss/variables";
+
+.pagination {
+  display: inline-flex;
+  margin-top: 50px;
+  gap: 10px;
+}
+
+.pageLink,
+.pageLinkMargin {
+  border: 1px solid;
+  border-radius: 50%;
+  color: $orange;
+  cursor: pointer;
+  &:hover,
+  &.pageLinkActive {
+    background-color: $orange;
+    color: #fff;
+  }
+  &.pageLinkDisabled {
+    color: rgba($color: $black, $alpha: 0.1);
+    border: 1px solid rgba($color: $black, $alpha: 0.1);
+    cursor: default;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+.pageLink {
+  padding: 10px 16px;
+}
+
+.pageLinkMargin {
+  padding: 10px 12px;
+}
