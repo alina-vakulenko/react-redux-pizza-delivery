@@ -9,62 +9,85 @@ import PizzaBlockSkeleton from "../components/pizzaBlock/PizzaBlockSkeleton";
 import Pagination from "../components/pagination";
 import { sortOptions } from "../components/Sort";
 
-import { setPage, setFilters, selectFilter } from "../redux/slices/filterSlice";
+import {
+  setPage,
+  setCategory,
+  setFilters,
+  selectFilter,
+} from "../redux/slices/filterSlice";
 import {
   fetchPizzaList,
   selectPizzaList,
 } from "../redux/slices/pizzaListSlice";
 
-export default function HomePage() {
+const HomePage = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-  const isMounted = useRef();
-  const isSearchParamsDispatched = useRef();
+  const isMounted = useRef(false);
+  const isSearchParamsDispatched = useRef(false);
 
-  const { categoryId, sortBy, search, page } = useSelector(selectFilter);
+  const { category, sortBy, search, page } = useSelector(selectFilter);
   const { items: pizzaItems, status } = useSelector(selectPizzaList);
   const itemsPerPage = 6;
 
+  type QueryParamsType = {
+    sortBy: string;
+    category?: number;
+    search?: string;
+    page: number;
+    limit?: number;
+  };
+
+  type SearchStringParams = {
+    sortBy: string;
+    page: number;
+    category: number;
+    search?: string;
+  };
+
   const getPizzas = async () => {
-    const queryParams = {
+    const queryParams: QueryParamsType = {
       sortBy: sortBy.value,
       page,
       limit: itemsPerPage,
     };
-    if (categoryId > 0) {
-      queryParams.category = categoryId;
+    if (category > 0) {
+      queryParams.category = category;
     }
     if (search) {
       queryParams.search = search;
     }
-    dispatch(fetchPizzaList(queryParams));
+    dispatch(
+      // @ts-ignore
+      fetchPizzaList(queryParams)
+    );
   };
 
   // Set isMounted = true after first render, in case of uptades in filter, searchParams will be overwritten
   useEffect(() => {
     if (isMounted.current) {
-      const params = {
+      const params: SearchStringParams = {
         sortBy: sortBy.value,
-        categoryId,
+        category,
         page,
       };
       if (search) {
         params.search = search;
       }
+      // @ts-ignore
       setSearchParams(params);
     }
     isMounted.current = true;
-  }, [categoryId, sortBy.value, page, search]);
+  }, [category, sortBy.value, page, search]);
 
-  // save searchParams to redux if they changed after first render
   useEffect(() => {
     if (searchParams.toString().length) {
       const params = Object.fromEntries([...searchParams]);
       const sortObj = sortOptions.find(
         (sortObj) => sortObj.value === params.sortBy
       );
-      if (categoryId === 0) {
-        params.categoryId = 0;
+      if (category === 0) {
+        params.category = "0";
       }
       dispatch(setFilters({ ...params, sortBy: sortObj }));
       isSearchParamsDispatched.current = true;
@@ -76,11 +99,16 @@ export default function HomePage() {
       getPizzas();
     }
     isSearchParamsDispatched.current = false;
-  }, [categoryId, sortBy.value, page, search]);
+  }, [category, sortBy.value, page, search]);
 
   return (
     <div className="container">
-      <Categories />
+      <Categories
+        activeCategory={category}
+        handleCategoryChange={(id: number) => {
+          dispatch(setCategory(id));
+        }}
+      />
       <div className="content__top">
         {status !== "rejected" && (
           <>
@@ -101,7 +129,7 @@ export default function HomePage() {
               ? [...Array(6)].map((_, index) => (
                   <PizzaBlockSkeleton key={index} />
                 ))
-              : pizzaItems.map((pizzaObj) => (
+              : pizzaItems.map((pizzaObj: any) => (
                   <PizzaBlock key={pizzaObj.id} {...pizzaObj} />
                 ))}
           </div>
@@ -109,7 +137,7 @@ export default function HomePage() {
             itemsPerPage={itemsPerPage}
             totalItems={10}
             currentPage={page}
-            onPageChange={(pageNumber) => {
+            onPageChange={(pageNumber: number) => {
               dispatch(setPage(pageNumber));
             }}
           />
@@ -117,4 +145,6 @@ export default function HomePage() {
       )}
     </div>
   );
-}
+};
+
+export default HomePage;

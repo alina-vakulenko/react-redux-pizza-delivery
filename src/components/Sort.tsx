@@ -3,34 +3,44 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setSortBy, selectFilter } from "../redux/slices/filterSlice";
 
-export const sortOptions = [
+type SortType = {
+  name: string;
+  value: string;
+};
+
+type PopupEvent = MouseEvent & {
+  composedPath: Node[];
+};
+
+export const sortOptions: SortType[] = [
   { name: "rating", value: "rating" },
   { name: "price", value: "price" },
   { name: "title", value: "title" },
 ];
 
-export default function Sort() {
+const Sort: React.FC = () => {
   const dispatch = useDispatch();
 
   const [openSortOptions, setOpenSortOptions] = useState(false);
 
   const { sortBy } = useSelector(selectFilter);
 
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onClickOutside = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      const _event = event as PopupEvent;
+      if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
         setOpenSortOptions(false);
       }
     };
 
-    document.body.addEventListener("click", onClickOutside);
+    document.body.addEventListener("click", handleClickOutside);
 
-    return () => document.body.removeEventListener("click", onClickOutside);
+    return () => document.body.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const handleSortClick = (sortObj) => {
+  const handleSortClick = (sortObj: SortType) => {
     dispatch(setSortBy(sortObj));
     setOpenSortOptions(false);
   };
@@ -73,4 +83,6 @@ export default function Sort() {
       )}
     </div>
   );
-}
+};
+
+export default Sort;

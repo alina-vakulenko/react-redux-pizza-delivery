@@ -3,12 +3,19 @@ import ReactPaginate from "react-paginate";
 
 import styles from "./Pagination.module.scss";
 
-export default function Pagination({
+type PaginationProps = {
+  itemsPerPage: number;
+  totalItems: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
+
+const Pagination: React.FC<PaginationProps> = ({
   itemsPerPage,
   totalItems,
   currentPage,
   onPageChange,
-}) {
+}) => {
   const pageCount = Math.ceil(totalItems / itemsPerPage);
 
   return (
@@ -27,7 +34,8 @@ export default function Pagination({
       pageRangeDisplayed={5}
       marginPagesDisplayed={1}
       pageCount={pageCount}
-      renderOnZeroPageCount={null}
     />
   );
-}
+};
+
+export default Pagination;

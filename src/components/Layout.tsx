@@ -1,9 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "../components/Header";
+import Header from "./Header";
 
-export default function Layout() {
+const Layout: React.FC = () => {
   return (
     <div className="wrapper">
       <Header />
@@ -12,4 +12,6 @@ export default function Layout() {
       </div>
     </div>
   );
-}
+};
+
+export default Layout;

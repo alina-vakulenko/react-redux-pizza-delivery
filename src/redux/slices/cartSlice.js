@@ -6,13 +6,6 @@ const initialState = {
   totalCount: 0,
 };
 
-export const typeNames = ["traditional", "thin"];
-
-export const pricingRates = {
-  typeRates: { 0: 1, 1: 1.1 },
-  sizeRates: { 0: 1, 1: 1.2, 2: 2 },
-};
-
 export const createCartItemId = (pizzaId, selectedTypeId, selectedSizeId) => {
   return `${pizzaId}t${selectedTypeId}s${selectedSizeId}`;
 };

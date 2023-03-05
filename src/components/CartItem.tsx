@@ -4,7 +4,18 @@ import { Link } from "react-router-dom";
 
 import { addItem, minusItem, removeItem } from "../redux/slices/cartSlice";
 
-export default function CartItem({
+type CartItemProps = {
+  pizzaId: string;
+  cartItemId: string;
+  title: string;
+  type: string;
+  size: number;
+  calculatedPrice: number;
+  imageUrl: string;
+  count: number;
+};
+
+const CartItem: React.FC<CartItemProps> = ({
   pizzaId,
   cartItemId,
   title,
@@ -13,7 +24,7 @@ export default function CartItem({
   calculatedPrice,
   imageUrl,
   count,
-}) {
+}) => {
   const dispatch = useDispatch();
 
   const onClickAdd = () => {
@@ -120,4 +131,6 @@ export default function CartItem({
       </div>
     </div>
   );
-}
+};
+
+export default CartItem;

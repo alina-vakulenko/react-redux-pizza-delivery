@@ -6,33 +6,60 @@ import { addItem } from "../../redux/slices/cartSlice";
 import {
   createCartItemId,
   selectCartItemsByPizzaId,
-  pricingRates,
-  typeNames,
 } from "../../redux/slices/cartSlice";
 
-export default function PizzaBlock({
+type PizzaBlockProps = {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+};
+
+const typeNames = ["traditional", "thin"];
+
+const priceMultipliers = {
+  type: [
+    { typeId: 0, multiplier: 1 },
+    { typeId: 1, multiplier: 1.1 },
+  ],
+  size: [
+    { sizeId: 0, multiplier: 1 },
+    { sizeId: 1, multiplier: 1.3 },
+    { sizeId: 2, multiplier: 1.8 },
+  ],
+};
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({
   id,
   title,
   price,
   imageUrl,
   sizes,
   types,
-}) {
+}) => {
   const dispatch = useDispatch();
-  const [activeTypeId, setActiveTypeId] = useState(0);
-  const [activeSizeId, setActiveSizeId] = useState(0);
-  const [calculatedPrice, setCalculatedPrice] = useState(price);
+  const [activeTypeId, setActiveTypeId] = useState<number>(0);
+  const [activeSizeId, setActiveSizeId] = useState<number>(0);
+  const [calculatedPrice, setCalculatedPrice] = useState<number>(price);
 
   const cartItemId = createCartItemId(id, activeTypeId, activeSizeId);
   const cartItemsByPizzaId = useSelector(selectCartItemsByPizzaId(id));
 
   useEffect(() => {
-    const newPrice = Math.ceil(
-      price *
-        pricingRates.typeRates[activeTypeId] *
-        pricingRates.sizeRates[activeSizeId]
-    );
-    setCalculatedPrice(newPrice);
+    const getActualPrice = () => {
+      const typeMultiplier =
+        priceMultipliers.type.find((item) => item.typeId === activeTypeId)
+          ?.multiplier || 1;
+      const sizeMultiplier =
+        priceMultipliers.size.find((item) => item.sizeId === activeSizeId)
+          ?.multiplier || 1;
+
+      return price * typeMultiplier * sizeMultiplier;
+    };
+
+    setCalculatedPrice(getActualPrice());
   }, [activeTypeId, activeSizeId]);
 
   const addItemToCart = () => {
@@ -100,11 +127,16 @@ export default function PizzaBlock({
           <span>Add to cart</span>
           {cartItemsByPizzaId ? (
             <i>
-              {cartItemsByPizzaId.reduce((sum, item) => sum + item.count, 0)}
+              {cartItemsByPizzaId.reduce(
+                (sum: number, item: any) => sum + item.count,
+                0
+              )}
             </i>
           ) : null}
         </button>
       </div>
     </div>
   );
-}
+};
+
+export default PizzaBlock;

@@ -8,12 +8,12 @@ import searchIcon from "../../assets/img/search-icon.svg";
 import clearIcon from "../../assets/img/clear-icon.svg";
 import styles from "./Search.module.scss";
 
-export default function Search() {
+const Search: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const updateSearchValue = useCallback(
     debounce((value) => {
@@ -22,7 +22,7 @@ export default function Search() {
     []
   );
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     updateSearchValue(e.target.value);
   };
@@ -30,7 +30,7 @@ export default function Search() {
   const clearInput = () => {
     setInputValue("");
     dispatch(setSearch(""));
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
   return (
@@ -54,4 +54,6 @@ export default function Search() {
       )}
     </form>
   );
-}
+};
+
+export default Search;

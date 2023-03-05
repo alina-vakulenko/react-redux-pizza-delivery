@@ -4,10 +4,16 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const typeNames = ["traditional", "thin"];
 
-export default function SinglePizzaPage() {
+const SinglePizzaPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [pizzaDataById, setPizzaDataById] = useState();
+  const [pizzaDataById, setPizzaDataById] = useState<{
+    title: string;
+    imageUrl: string;
+    types: number[];
+    sizes: number[];
+    ingridients: string[];
+  }>();
 
   useEffect(() => {
     const fetchPizza = async () => {
@@ -25,7 +31,7 @@ export default function SinglePizzaPage() {
     fetchPizza();
   }, [id]);
 
-  if (!pizzaDataById) return <div>Loading data...</div>;
+  if (!pizzaDataById) return <>Loading data...</>;
 
   return (
     <div className="pizza-block">
@@ -76,4 +82,6 @@ export default function SinglePizzaPage() {
       </button>
     </div>
   );
-}
+};
+
+export default SinglePizzaPage;

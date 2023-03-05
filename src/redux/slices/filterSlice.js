@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  categoryId: 0,
+  category: 0,
   sortBy: {
     name: "rating",
     value: "rating",
@@ -14,17 +14,17 @@ const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setCategoryId(state, action) {
-      state.categoryId = action.payload;
+    setCategory(state, action) {
+      state.category = action.payload;
       state.page = 1;
     },
     setSortBy(state, action) {
-      state.categoryId = 0;
+      state.category = 0;
       state.page = 1;
       state.sortBy = action.payload;
     },
     setSearch(state, action) {
-      state.categoryId = 0;
+      state.category = 0;
       state.page = 1;
       state.search = action.payload;
     },
@@ -32,7 +32,7 @@ const filterSlice = createSlice({
       state.page = action.payload;
     },
     setFilters(state, action) {
-      state.categoryId = Number(action.payload.categoryId);
+      state.category = Number(action.payload.category);
       state.page = Number(action.payload.page);
       state.sortBy = action.payload.sortBy;
       state.search = action.payload.search;
@@ -42,7 +42,7 @@ const filterSlice = createSlice({
 
 export const selectFilter = (state) => state.filter;
 
-export const { setCategoryId, setSortBy, setSearch, setPage, setFilters } =
+export const { setCategory, setSortBy, setSearch, setPage, setFilters } =
   filterSlice.actions;
 
 export default filterSlice.reducer;
