@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
+import { useAppDispatch } from "../redux/store";
+import { FetchPizzaListArgs, Pizza } from "../redux/slices/pizzaListSlice";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/pizzaBlock";
@@ -15,13 +17,14 @@ import {
   setFilters,
   selectFilter,
 } from "../redux/slices/filterSlice";
+
 import {
   fetchPizzaList,
   selectPizzaList,
 } from "../redux/slices/pizzaListSlice";
 
 const HomePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const isMounted = useRef(false);
   const isSearchParamsDispatched = useRef(false);
@@ -30,23 +33,8 @@ const HomePage = () => {
   const { items: pizzaItems, status } = useSelector(selectPizzaList);
   const itemsPerPage = 6;
 
-  type QueryParamsType = {
-    sortBy: string;
-    category?: number;
-    search?: string;
-    page: number;
-    limit?: number;
-  };
-
-  type SearchStringParams = {
-    sortBy: string;
-    page: number;
-    category: number;
-    search?: string;
-  };
-
   const getPizzas = async () => {
-    const queryParams: QueryParamsType = {
+    const queryParams: FetchPizzaListArgs = {
       sortBy: sortBy.value,
       page,
       limit: itemsPerPage,
@@ -57,25 +45,22 @@ const HomePage = () => {
     if (search) {
       queryParams.search = search;
     }
-    dispatch(
-      // @ts-ignore
-      fetchPizzaList(queryParams)
-    );
+    dispatch(fetchPizzaList(queryParams));
   };
 
-  // Set isMounted = true after first render, in case of uptades in filter, searchParams will be overwritten
   useEffect(() => {
     if (isMounted.current) {
-      const params: SearchStringParams = {
+      const searchParams: Record<string, string> = {
         sortBy: sortBy.value,
-        category,
-        page,
+        category: String(category),
       };
-      if (search) {
-        params.search = search;
+      if (page > 1) {
+        searchParams.page = String(page);
       }
-      // @ts-ignore
-      setSearchParams(params);
+      if (search) {
+        searchParams.search = search;
+      }
+      setSearchParams(new URLSearchParams(searchParams));
     }
     isMounted.current = true;
   }, [category, sortBy.value, page, search]);
@@ -83,13 +68,17 @@ const HomePage = () => {
   useEffect(() => {
     if (searchParams.toString().length) {
       const params = Object.fromEntries([...searchParams]);
-      const sortObj = sortOptions.find(
+      let sortObj = sortOptions.find(
         (sortObj) => sortObj.value === params.sortBy
       );
-      if (category === 0) {
-        params.category = "0";
-      }
-      dispatch(setFilters({ ...params, sortBy: sortObj }));
+      dispatch(
+        setFilters({
+          sortBy: sortObj || sortOptions[0],
+          category: category === 0 ? 0 : Number(params.category),
+          search: params.search || "",
+          page: page === 1 ? 1 : Number(params.number),
+        })
+      );
       isSearchParamsDispatched.current = true;
     }
   }, []);
@@ -129,7 +118,7 @@ const HomePage = () => {
               ? [...Array(6)].map((_, index) => (
                   <PizzaBlockSkeleton key={index} />
                 ))
-              : pizzaItems.map((pizzaObj: any) => (
+              : pizzaItems.map((pizzaObj: Pizza) => (
                   <PizzaBlock key={pizzaObj.id} {...pizzaObj} />
                 ))}
           </div>

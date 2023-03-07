@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setSortBy, selectFilter } from "../redux/slices/filterSlice";
-
-type SortType = {
-  name: string;
-  value: string;
-};
+import {
+  setSortBy,
+  selectFilter,
+  SortObj,
+  SortValues,
+} from "../redux/slices/filterSlice";
 
 type PopupEvent = MouseEvent & {
   composedPath: Node[];
 };
 
-export const sortOptions: SortType[] = [
-  { name: "rating", value: "rating" },
-  { name: "price", value: "price" },
-  { name: "title", value: "title" },
+export const sortOptions: SortObj[] = [
+  { name: "rating", value: SortValues.RATING },
+  { name: "price", value: SortValues.PRICE },
+  { name: "title", value: SortValues.TITLE },
 ];
 
 const Sort: React.FC = () => {
@@ -40,7 +40,7 @@ const Sort: React.FC = () => {
     return () => document.body.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const handleSortClick = (sortObj: SortType) => {
+  const handleSortClick = (sortObj: SortObj) => {
     dispatch(setSortBy(sortObj));
     setOpenSortOptions(false);
   };

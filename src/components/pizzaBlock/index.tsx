@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { addItem } from "../../redux/slices/cartSlice";
-import {
-  createCartItemId,
-  selectCartItemsByPizzaId,
-} from "../../redux/slices/cartSlice";
+import { addItem, CartItem } from "../../redux/slices/cartSlice";
+import { selectCartItemsByPizzaId } from "../../redux/slices/cartSlice";
+import { generateCartItemId } from "../../utils/generateCartItemId";
+import { calcPriceMultiplier } from "../../utils/calcPriceMultiplier";
 
 type PizzaBlockProps = {
   id: string;
@@ -17,9 +16,16 @@ type PizzaBlockProps = {
   types: number[];
 };
 
-const typeNames = ["traditional", "thin"];
+type PriceFactor = "type" | "size";
 
-const priceMultipliers = {
+export type PriceFactorMultiplier = {
+  [key: string]: number;
+  multiplier: number;
+};
+
+export type PriceReference = Record<PriceFactor, PriceFactorMultiplier[]>;
+
+const priceReferenceTable: PriceReference = {
   type: [
     { typeId: 0, multiplier: 1 },
     { typeId: 1, multiplier: 1.1 },
@@ -30,6 +36,8 @@ const priceMultipliers = {
     { sizeId: 2, multiplier: 1.8 },
   ],
 };
+
+const typeNames = ["traditional", "thin"];
 
 const PizzaBlock: React.FC<PizzaBlockProps> = ({
   id,
@@ -44,33 +52,29 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   const [activeSizeId, setActiveSizeId] = useState<number>(0);
   const [calculatedPrice, setCalculatedPrice] = useState<number>(price);
 
-  const cartItemId = createCartItemId(id, activeTypeId, activeSizeId);
+  const cartItemId = generateCartItemId(id, activeTypeId, activeSizeId);
   const cartItemsByPizzaId = useSelector(selectCartItemsByPizzaId(id));
 
   useEffect(() => {
-    const getActualPrice = () => {
-      const typeMultiplier =
-        priceMultipliers.type.find((item) => item.typeId === activeTypeId)
-          ?.multiplier || 1;
-      const sizeMultiplier =
-        priceMultipliers.size.find((item) => item.sizeId === activeSizeId)
-          ?.multiplier || 1;
-
-      return price * typeMultiplier * sizeMultiplier;
-    };
-
-    setCalculatedPrice(getActualPrice());
+    const calculatedPrice = Math.ceil(
+      price *
+        calcPriceMultiplier(activeTypeId, activeSizeId, priceReferenceTable)
+    );
+    setCalculatedPrice(calculatedPrice);
   }, [activeTypeId, activeSizeId]);
 
   const addItemToCart = () => {
-    const cartItem = {
+    const cartItem: CartItem = {
       pizzaId: id,
       cartItemId: cartItemId,
       title,
       calculatedPrice,
+      imageUrl,
       type: typeNames[activeTypeId],
       size: sizes[activeSizeId],
+      count: 0,
     };
+
     dispatch(addItem(cartItem));
   };
 

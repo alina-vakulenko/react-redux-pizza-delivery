@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
@@ -8,9 +8,21 @@ import { selectCart } from "../redux/slices/cartSlice";
 import pizzaLogoSvg from "../assets/img/pizza-logo.svg";
 
 const Header: React.FC = () => {
-  const { totalAmount: totalCartAmount, totalCount: totalCartCount } =
-    useSelector(selectCart);
+  const {
+    items: cartItems,
+    totalAmount: totalCartAmount,
+    totalCount: totalCartCount,
+  } = useSelector(selectCart);
   const { pathname } = useLocation();
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted) {
+      const cartData = JSON.stringify(cartItems);
+      localStorage.setItem("cartData", cartData);
+    }
+    isMounted.current = true;
+  }, [cartItems]);
 
   return (
     <div className="header">
@@ -25,7 +37,7 @@ const Header: React.FC = () => {
           </div>
         </Link>
 
-        <Search />
+        {pathname === "/" && <Search />}
 
         <div className="header__cart">
           {pathname !== "/cart" ? (

@@ -2,7 +2,12 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { addItem, minusItem, removeItem } from "../redux/slices/cartSlice";
+import {
+  addItem,
+  minusItem,
+  removeItem,
+  CartItem as CartItemType,
+} from "../redux/slices/cartSlice";
 
 type CartItemProps = {
   pizzaId: string;
@@ -28,7 +33,7 @@ const CartItem: React.FC<CartItemProps> = ({
   const dispatch = useDispatch();
 
   const onClickAdd = () => {
-    dispatch(addItem({ cartItemId }));
+    dispatch(addItem({ cartItemId } as CartItemType));
   };
 
   const onClickRemove = () => {
@@ -62,6 +67,7 @@ const CartItem: React.FC<CartItemProps> = ({
         <button
           onClick={onClickMinus}
           className="button button--outline button--circle cart__item-count-minus"
+          disabled={count === 1}
         >
           <svg
             width="10"
