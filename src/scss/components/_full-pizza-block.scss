@@ -1,0 +1,52 @@
+@import "../variables";
+
+.full-pizza-block {
+  &__image {
+    width: 200px;
+  }
+
+  &__title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1%;
+    margin-bottom: 20px;
+  }
+
+  p {
+    text-align: left;
+    margin: 20px auto;
+
+    h4 {
+      display: inline;
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+      color: $orange;
+      font-style: italic;
+
+      li {
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #f3f3f3;
+        border-radius: 15px;
+      }
+    }
+
+    span {
+      color: $orange;
+      font-style: italic;
+      background-color: #f3f3f3;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 15px;
+    }
+  }
+  &__bottom {
+    margin-top: 50px;
+    text-align: center;
+  }
+}

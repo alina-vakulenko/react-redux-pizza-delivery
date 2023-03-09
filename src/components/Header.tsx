@@ -1,28 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 import Search from "./search";
-import { selectCart } from "../redux/slices/cartSlice";
+import { selectCart } from "../features/cart/selectors";
 
 import pizzaLogoSvg from "../assets/img/pizza-logo.svg";
 
 const Header: React.FC = () => {
-  const {
-    items: cartItems,
-    totalAmount: totalCartAmount,
-    totalCount: totalCartCount,
-  } = useSelector(selectCart);
   const { pathname } = useLocation();
-  const isMounted = useRef(false);
 
-  useEffect(() => {
-    if (isMounted) {
-      const cartData = JSON.stringify(cartItems);
-      localStorage.setItem("cartData", cartData);
-    }
-    isMounted.current = true;
-  }, [cartItems]);
+  const { totalAmount, totalCount } = useSelector(selectCart);
 
   return (
     <div className="header">
@@ -40,9 +28,9 @@ const Header: React.FC = () => {
         {pathname === "/" && <Search />}
 
         <div className="header__cart">
-          {pathname !== "/cart" ? (
+          {pathname !== "/cart" && (
             <Link to="/cart" className="button button--cart">
-              <span>{totalCartAmount} $</span>
+              <span>{totalAmount} $</span>
               <div className="button__delimiter"></div>
               <svg
                 width="18"
@@ -73,9 +61,9 @@ const Header: React.FC = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span>{totalCartCount}</span>
+              <span>{totalCount}</span>
             </Link>
-          ) : null}
+          )}
         </div>
       </div>
     </div>

@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
-import { useAppDispatch } from "../redux/store";
-import { FetchPizzaListArgs, Pizza } from "../redux/slices/pizzaListSlice";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/pizzaBlock";
@@ -11,17 +9,18 @@ import PizzaBlockSkeleton from "../components/pizzaBlock/PizzaBlockSkeleton";
 import Pagination from "../components/pagination";
 import { sortOptions } from "../components/Sort";
 
+import { useAppDispatch } from "../redux/store";
+import { FetchPizzaListArgs, Pizza } from "../features/pizzaList/types";
 import {
   setPage,
+  setSortBy,
   setCategory,
   setFilters,
-  selectFilter,
-} from "../redux/slices/filterSlice";
-
-import {
-  fetchPizzaList,
-  selectPizzaList,
-} from "../redux/slices/pizzaListSlice";
+} from "../features/filter/filterSlice";
+import { selectFilter } from "../features/filter/selectors";
+import { fetchPizzaList } from "../features/pizzaList/fetchPizzaList";
+import { selectPizzaList } from "../features/pizzaList/selectors";
+import { SortObj } from "../features/filter/types";
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -90,19 +89,27 @@ const HomePage = () => {
     isSearchParamsDispatched.current = false;
   }, [category, sortBy.value, page, search]);
 
+  const handleCategoryChange = useCallback(
+    (id: number) => dispatch(setCategory(id)),
+    []
+  );
+
+  const handleSortChange = useCallback(
+    (sortObj: SortObj) => dispatch(setSortBy(sortObj)),
+    []
+  );
+
   return (
     <div className="container">
       <Categories
         activeCategory={category}
-        handleCategoryChange={(id: number) => {
-          dispatch(setCategory(id));
-        }}
+        handleCategoryChange={handleCategoryChange}
       />
       <div className="content__top">
         {status !== "rejected" && (
           <>
             <h2 className="content__title">Choose your pizza</h2>
-            <Sort />
+            <Sort sortBy={sortBy} handleSortChange={handleSortChange} />
           </>
         )}
       </div>

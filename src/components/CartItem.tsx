@@ -2,25 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import {
-  addItem,
-  minusItem,
-  removeItem,
-  CartItem as CartItemType,
-} from "../redux/slices/cartSlice";
+import { addItem, minusItem, removeItem } from "../features/cart/cartSlice";
+import { CartItem as CartItemType } from "../features/cart/types";
 
-type CartItemProps = {
-  pizzaId: string;
-  cartItemId: string;
-  title: string;
-  type: string;
-  size: number;
-  calculatedPrice: number;
-  imageUrl: string;
-  count: number;
-};
-
-const CartItem: React.FC<CartItemProps> = ({
+const CartItem: React.FC<CartItemType> = ({
   pizzaId,
   cartItemId,
   title,
@@ -43,16 +28,12 @@ const CartItem: React.FC<CartItemProps> = ({
   };
 
   const onClickMinus = () => {
-    if (count > 1) {
-      dispatch(minusItem(cartItemId));
-    } else {
-      onClickRemove();
-    }
+    dispatch(minusItem(cartItemId));
   };
 
   return (
     <div className="cart__item">
-      <Link to={`/pizza/${pizzaId}`}>
+      <Link to={`/pizza/${pizzaId}`} className="cart__item-link">
         <div className="cart__item-img">
           <img className="pizza-block__image" src={imageUrl} alt={title} />
         </div>

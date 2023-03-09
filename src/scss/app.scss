@@ -1,6 +1,5 @@
 @import "./variables";
 @import "./libs/normalize";
-
 @import "./components/all";
 
 body {
@@ -44,7 +43,6 @@ body {
   &__items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    // grid-template-rows: repeat(1, 1fr);
     column-gap: 20px;
     row-gap: 65px;
     justify-items: center;
@@ -81,6 +79,11 @@ body {
     //   flex-direction: column-reverse;
     // }
   }
+
+  &__full-pizza {
+    text-align: center;
+    padding: 0 30px;
+  }
 }
 
 .container {
@@ -93,6 +96,9 @@ body {
     .content__title {
       margin: 0;
     }
+  }
+  &--full-pizza {
+    max-width: 500px;
   }
 }
 
@@ -154,35 +160,30 @@ body {
     }
   }
 
-  .cart__items {
-    display: block;
-  }
-
   &__item {
-    display: flex;
-    width: 100%;
-    border-top: 1px solid $gray-line;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(12, 1fr);
     padding-top: 30px;
     margin-top: 30px;
+    border-top: 1px solid $gray-line;
 
-    &-img {
+    &-link {
+      grid-column: span 6;
       display: flex;
       align-items: center;
-      margin-right: 15px;
-      width: 10%;
+    }
 
+    &-img {
       img {
+        display: block;
         width: 80px;
         height: 80px;
+        margin-right: 15px;
       }
     }
 
     &-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 40%;
-
       h3 {
         font-weight: bold;
         font-size: 22px;
@@ -197,10 +198,9 @@ body {
     }
 
     &-count {
+      grid-column: span 3;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      width: 13%;
 
       &-minus {
         svg {
@@ -232,31 +232,23 @@ body {
 
       b {
         font-size: 22px;
+        margin: auto 15px;
       }
     }
 
     &-price {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 33%;
+      grid-column: span 2;
+      text-align: center;
 
       b {
-        font-weight: bold;
         font-size: 22px;
         letter-spacing: 0.01em;
       }
     }
 
     &-remove {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      width: 4%;
-
-      .button {
-        border-color: darken($color: $gray-line, $amount: 10);
-      }
+      grid-column: span 1;
+      margin-left: auto;
 
       svg {
         transform: rotate(45deg);
@@ -267,11 +259,14 @@ body {
       }
 
       .button {
+        border-color: darken($color: $gray-line, $amount: 10);
+
         svg {
           width: 11.5px;
           height: 11.5px;
           position: relative;
         }
+
         &:hover,
         &:active {
           border-color: darken($color: $gray-line, $amount: 80);

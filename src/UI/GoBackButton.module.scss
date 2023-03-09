@@ -1,0 +1,43 @@
+@import "../scss/variables";
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c3c3c3;
+  border-radius: 30px;
+  padding: 10px 20px;
+  background-color: transparent;
+  transition: background-color $duration ease-in-out,
+    border-color $duration ease-in-out;
+  cursor: pointer;
+
+  span {
+    color: #c3c3c3;
+    font-weight: 600;
+  }
+
+  svg {
+    margin-right: 12px;
+    color: #c3c3c3;
+
+    &.path {
+      fill: transparent;
+      stroke-width: 2;
+    }
+  }
+  &:hover {
+    background-color: #111111;
+    border-color: #111111;
+  }
+
+  &:hover span,
+  svg {
+    color: #f6f6f6;
+  }
+
+  span,
+  svg {
+    transition: all $duration ease-in-out;
+  }
+}

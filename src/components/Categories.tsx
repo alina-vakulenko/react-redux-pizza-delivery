@@ -1,9 +1,5 @@
 import React from "react";
-
-type CategoryObj = {
-  id: number;
-  name: string;
-};
+import { CategoriesProps, CategoryObj } from "../features/filter/types";
 
 const categories: CategoryObj[] = [
   { id: 0, name: "All" },
@@ -13,11 +9,6 @@ const categories: CategoryObj[] = [
   { id: 4, name: "Spicy" },
   { id: 5, name: "Veggie" },
 ];
-
-type CategoriesProps = {
-  activeCategory: number;
-  handleCategoryChange: (id: number) => void;
-};
 
 const Categories: React.FC<CategoriesProps> = ({
   activeCategory,
