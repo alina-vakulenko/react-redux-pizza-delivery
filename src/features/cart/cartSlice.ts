@@ -1,10 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CartItem, CartSliceState } from "./types";
-import {
-  getCartTotalAmount,
-  getCartTotalCount,
-} from "../../utils/getLSCartData";
+import { getCartTotalAmount, getCartTotalCount } from "../../utils/calcCartSum";
 
 const initialState: CartSliceState = {
   items: [],
