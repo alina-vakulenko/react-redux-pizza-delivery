@@ -1,6 +1,4 @@
-@import "../variables";
-
-.categories {
+.menu {
   ul {
     display: flex;
 
@@ -10,9 +8,8 @@
       border-radius: 30px;
       margin-right: 10px;
       font-weight: bold;
-      cursor: pointer;
       transition: background-color 0.1s ease-in-out;
-      @include noselect();
+      cursor: pointer;
 
       &:hover {
         background-color: darken(#f9f9f9, 2%);

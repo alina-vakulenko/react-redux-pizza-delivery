@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
@@ -7,10 +7,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 import "./scss/app.scss";
 
-const CartPage = React.lazy(
+const CartPage = lazy(
   () => import(/* webpackChunkName: "Cart" */ "./pages/CartPage")
 );
-const SinglePizzaPage = React.lazy(
+const SinglePizzaPage = lazy(
   () => import(/* webpackChunkName: "pizzaItem" */ "./pages/SinglePizzaPage")
 );
 

@@ -14,19 +14,19 @@ const Header: React.FC = () => {
 
   return (
     <div className="header">
-      <div className="container">
-        <Link to="/">
-          <div className="header__logo">
-            <img width="38" src={pizzaLogoSvg} alt="Pizza logo" />
-            <div>
-              <h1>React Pizza</h1>
-              <p>The fastest pizza delivery</p>
-            </div>
+      <div
+        className={
+          pathname === "/cart" ? "container--cart-header" : "container"
+        }
+      >
+        <Link to="/" className="header__logo">
+          <img width="38" src={pizzaLogoSvg} alt="Pizza logo" />
+          <div>
+            <h1>React Pizza</h1>
+            <p>The fastest pizza delivery</p>
           </div>
         </Link>
-
-        {pathname === "/" && <Search />}
-
+        <div className="header__search">{pathname === "/" && <Search />}</div>
         <div className="header__cart">
           {pathname !== "/cart" && (
             <Link to="/cart" className="button button--cart">

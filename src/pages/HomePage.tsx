@@ -1,32 +1,28 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
-import Categories from "../components/Categories";
-import Sort from "../components/Sort";
-import PizzaBlock from "../components/pizzaBlock";
-import PizzaBlockSkeleton from "../components/pizzaBlock/PizzaBlockSkeleton";
-import Pagination from "../components/pagination";
-import { sortOptions } from "../components/Sort";
+import {
+  Filters,
+  PizzaBlock,
+  PizzaBlockSkeleton,
+  Pagination,
+} from "../components";
 
 import { useAppDispatch } from "../redux/store";
+import { categoriesList, sortList } from "../components/filters";
+
 import { FetchPizzaListArgs, Pizza } from "../features/pizzaList/types";
-import {
-  setPage,
-  setSortBy,
-  setCategory,
-  setFilters,
-} from "../features/filter/filterSlice";
+import { setPage, setFilters } from "../features/filter/filterSlice";
 import { selectFilter } from "../features/filter/selectors";
 import { fetchPizzaList } from "../features/pizzaList/fetchPizzaList";
 import { selectPizzaList } from "../features/pizzaList/selectors";
-import { SortObj } from "../features/filter/types";
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-  const isMounted = useRef(false);
   const isSearchParamsDispatched = useRef(false);
+  const isMounted = useRef(false);
 
   const { category, sortBy, search, page } = useSelector(selectFilter);
   const { items: pizzaItems, status } = useSelector(selectPizzaList);
@@ -34,12 +30,12 @@ const HomePage = () => {
 
   const getPizzas = async () => {
     const queryParams: FetchPizzaListArgs = {
-      sortBy: sortBy.value,
+      sortBy: sortBy.name,
       page,
       limit: itemsPerPage,
     };
-    if (category > 0) {
-      queryParams.category = category;
+    if (category.name !== "0") {
+      queryParams.category = category.name;
     }
     if (search) {
       queryParams.search = search;
@@ -50,9 +46,10 @@ const HomePage = () => {
   useEffect(() => {
     if (isMounted.current) {
       const searchParams: Record<string, string> = {
-        sortBy: sortBy.value,
-        category: String(category),
+        sortBy: sortBy.name,
+        category: category.name,
       };
+
       if (page > 1) {
         searchParams.page = String(page);
       }
@@ -62,18 +59,20 @@ const HomePage = () => {
       setSearchParams(new URLSearchParams(searchParams));
     }
     isMounted.current = true;
-  }, [category, sortBy.value, page, search]);
+  }, [category, sortBy, page, search]);
 
   useEffect(() => {
     if (searchParams.toString().length) {
       const params = Object.fromEntries([...searchParams]);
-      let sortObj = sortOptions.find(
-        (sortObj) => sortObj.value === params.sortBy
-      );
+      let sortObj =
+        sortList.find((obj) => obj.name === params.sortBy) || sortList[0];
+      let categoryObj =
+        categoriesList.find((obj) => obj.name === params.category) ||
+        categoriesList[0];
       dispatch(
         setFilters({
-          sortBy: sortObj || sortOptions[0],
-          category: category === 0 ? 0 : Number(params.category),
+          sortBy: sortObj,
+          category: categoryObj,
           search: params.search || "",
           page: page === 1 ? 1 : Number(params.number),
         })
@@ -87,32 +86,10 @@ const HomePage = () => {
       getPizzas();
     }
     isSearchParamsDispatched.current = false;
-  }, [category, sortBy.value, page, search]);
-
-  const handleCategoryChange = useCallback(
-    (id: number) => dispatch(setCategory(id)),
-    []
-  );
-
-  const handleSortChange = useCallback(
-    (sortObj: SortObj) => dispatch(setSortBy(sortObj)),
-    []
-  );
+  }, [category, sortBy, page, search]);
 
   return (
     <div className="container">
-      <Categories
-        activeCategory={category}
-        handleCategoryChange={handleCategoryChange}
-      />
-      <div className="content__top">
-        {status !== "rejected" && (
-          <>
-            <h2 className="content__title">Choose your pizza</h2>
-            <Sort sortBy={sortBy} handleSortChange={handleSortChange} />
-          </>
-        )}
-      </div>
       {status === "rejected" ? (
         <div className="content__error-info">
           <h2>Oops, an error occured</h2>
@@ -120,6 +97,7 @@ const HomePage = () => {
         </div>
       ) : (
         <>
+          <Filters />
           <div className="content__items">
             {status === "loading"
               ? [...Array(6)].map((_, index) => (

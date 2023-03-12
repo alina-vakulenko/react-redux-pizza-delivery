@@ -1,7 +1,7 @@
 export type FetchPizzaListArgs = {
   page: number;
   sortBy: string;
-  category?: number;
+  category?: string;
   search?: string;
   limit: number;
 };

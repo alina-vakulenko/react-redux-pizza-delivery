@@ -1,20 +1,24 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./GoBackButton.module.scss";
 
 type GoBackButtonProps = {
-  onClick: () => void;
   children: string;
   otherProps?: any;
 };
 
 export const GoBackButton: React.FC<GoBackButtonProps> = ({
-  onClick,
   children,
   ...otherProps
 }) => {
+  const navigate = useNavigate();
   return (
-    <button onClick={onClick} className={styles.root} {...otherProps}>
+    <button
+      onClick={() => navigate(-1)}
+      className={styles.root}
+      {...otherProps}
+    >
       <svg
         width="8"
         height="14"

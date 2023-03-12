@@ -1,25 +1,27 @@
 @import "../scss/variables";
 
 .root {
+  width: 210px;
+  padding: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #c3c3c3;
   border-radius: 30px;
-  padding: 10px 20px;
   background-color: transparent;
   transition: background-color $duration ease-in-out,
     border-color $duration ease-in-out;
   cursor: pointer;
 
   span {
-    color: #c3c3c3;
+    color: darken($color: $gray-line, $amount: 20);
     font-weight: 600;
+    font-size: 16px;
   }
 
   svg {
     margin-right: 12px;
-    color: #c3c3c3;
+    color: darken($color: $gray-line, $amount: 20);
 
     &.path {
       fill: transparent;
@@ -27,13 +29,13 @@
     }
   }
   &:hover {
-    background-color: #111111;
-    border-color: #111111;
+    background-color: darken($color: $gray-line, $amount: 90);
+    border-color: darken($color: $gray-line, $amount: 90);
   }
 
   &:hover span,
   svg {
-    color: #f6f6f6;
+    color: $gray-line;
   }
 
   span,

@@ -132,18 +132,28 @@
 
   &--cart {
     display: flex;
+    margin-left: auto;
+    max-width: 160px;
     align-items: center;
+    justify-content: center;
     line-height: 23px;
     padding: 12px 25px;
 
     svg {
       margin-right: 8px;
-      margin-bottom: 1px;
     }
 
     span {
       font-weight: 600;
       font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      max-width: 100px;
+    }
+
+    @media (max-width: 445px) {
+      max-width: 100%;
     }
   }
 }
