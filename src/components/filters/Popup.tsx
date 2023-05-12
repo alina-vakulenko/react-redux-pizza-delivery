@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PopupProps, OptionObj, PopupEvent } from "../../features/filter/types";
+import { PopupProps, OptionObj } from "../../features/filter/types";
 import { usePopup } from "../../hooks/usePopup";
 
 import style from "./popup.module.scss";

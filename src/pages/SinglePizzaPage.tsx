@@ -17,7 +17,7 @@ const SinglePizzaPage = () => {
 
   useEffect(() => {
     id && dispatch(fetchPizzaById(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   if (status === Status.PENDING) {
     return <div>{Status.PENDING}</div>;

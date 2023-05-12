@@ -62,7 +62,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
         calcPriceMultiplier(activeTypeId, activeSizeId, priceReferenceTable)
     );
     setCalculatedPrice(calculatedPrice);
-  }, [activeTypeId, activeSizeId]);
+  }, [activeTypeId, activeSizeId, price]);
 
   const addItemToCart = () => {
     const cartItem: CartItem = {

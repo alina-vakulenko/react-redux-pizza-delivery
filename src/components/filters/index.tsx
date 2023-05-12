@@ -35,12 +35,12 @@ const Filters: React.FC = () => {
 
   const handleCategoryChange = useCallback(
     (categoryObj: OptionObj) => dispatch(setCategory(categoryObj)),
-    []
+    [dispatch]
   );
 
   const handleSortChange = useCallback(
     (sortObj: OptionObj) => dispatch(setSortBy(sortObj)),
-    []
+    [dispatch]
   );
 
   return (

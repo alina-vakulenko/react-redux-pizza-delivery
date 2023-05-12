@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
@@ -27,21 +28,6 @@ const HomePage = () => {
   const { category, sortBy, search, page } = useSelector(selectFilter);
   const { items: pizzaItems, status } = useSelector(selectPizzaList);
   const itemsPerPage = 6;
-
-  const getPizzas = async () => {
-    const queryParams: FetchPizzaListArgs = {
-      sortBy: sortBy.name,
-      page,
-      limit: itemsPerPage,
-    };
-    if (category.name !== "0") {
-      queryParams.category = category.name;
-    }
-    if (search) {
-      queryParams.search = search;
-    }
-    dispatch(fetchPizzaList(queryParams));
-  };
 
   useEffect(() => {
     if (isMounted.current) {
@@ -79,14 +65,30 @@ const HomePage = () => {
       );
       isSearchParamsDispatched.current = true;
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, page]);
 
   useEffect(() => {
+    const getPizzas = async () => {
+      const queryParams: FetchPizzaListArgs = {
+        sortBy: sortBy.name,
+        page,
+        limit: itemsPerPage,
+      };
+      if (category.name !== "0") {
+        queryParams.category = category.name;
+      }
+      if (search) {
+        queryParams.search = search;
+      }
+      dispatch(fetchPizzaList(queryParams));
+    };
+
     if (!isSearchParamsDispatched.current) {
       getPizzas();
     }
     isSearchParamsDispatched.current = false;
-  }, [category, sortBy, page, search]);
+  }, [category, sortBy, page, search, dispatch]);
 
   return (
     <div className="container">
