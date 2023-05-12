@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c90da81c-a762-40de-9cd5-d2d7bfc83812/deploy-status)](https://app.netlify.com/sites/pizza-delivery-react-redux/deploys)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
