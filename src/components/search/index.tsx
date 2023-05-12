@@ -15,6 +15,7 @@ const Search: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchValue = useCallback(
     debounce((value) => {
       dispatch(setSearch(value));
